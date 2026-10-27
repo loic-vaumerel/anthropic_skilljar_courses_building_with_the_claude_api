@@ -1,3 +1,8 @@
 python3 -m venv venv
 ./venv/bin/pip install --upgrade pip
-./venv/bin/pip install anthropic python-dotenv
+./venv/bin/pip install "anthropic<2" python-dotenv
+
+./venv/bin/pip show anthropic
+
+# ./venv/bin/pip uninstall anthropic
+# ./venv/bin/pip install anthropic

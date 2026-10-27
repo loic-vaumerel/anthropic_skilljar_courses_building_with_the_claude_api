@@ -12,25 +12,28 @@ def add_assistant_message(p_messages, p_text):
     v_assistant_message = {"role": "assistant", "content": p_text}
     p_messages.append(v_assistant_message)
 
-def chat(p_messages, p_system_prompt=None, p_temperature=1.0):
-    v_parameters = {
+def chat(messages, system=None, temperature=1.0, stop_sequences=[]):
+    params = {
         "model": v_model,
         "max_tokens": 1000,
-        "messages": p_messages,
-        "temperature": p_temperature
+        "messages": messages,
+        "stop_sequences": stop_sequences,
+        "extra_body": {"temperature": temperature},
     }
-    if p_system_prompt:
-        v_parameters["system"] = p_system_prompt
-    v_message = v_client.messages.create(**v_parameters)
-    return "".join(b.text for b in v_message.content if b.type == "text")
+
+    if system:
+        params["system"] = system
+
+    message = v_client.messages.create(**params)
+    return message.content[0].text
 
 v_client = Anthropic()
-v_model="claude-sonnet-5-5"
+v_model="claude-haiku-4-5"
 # v_system_prompt = """
 # You are an Python engineer who writes very concise code. Just answer with the function code and nothing else.
 # """
 v_messages = []
 add_user_message(v_messages, "Generate a one sentence movie idea")
-v_answer = chat(v_messages, p_temperature=0.0)
+v_answer = chat(v_messages, temperature=1.0)
 print(v_answer)
 
